@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import './Services.css';
+import { Box, Container, Typography, Accordion, AccordionSummary, AccordionDetails, Grid } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const servicesData = [
     {
@@ -29,38 +30,66 @@ const servicesData = [
 ];
 
 const Services = () => {
-    const [activeIndex, setActiveIndex] = useState(null);
+    const [expanded, setExpanded] = useState(false);
 
-    const toggleAccordion = (index) => {
-        setActiveIndex(activeIndex === index ? null : index);
+    const handleChange = (panel) => (event, isExpanded) => {
+        setExpanded(isExpanded ? panel : false);
     };
 
     return (
-        <section className="section services" id="servicios">
-            <div className="container">
-                <h2 className="section-title">Nuestros Servicios</h2>
-                <p className="section-subtitle">Soluciones integrales para diferenciar tu marca</p>
+        <Box component="section" id="servicios" sx={{ py: 12 }}>
+            <Container maxWidth="lg">
+                <Box sx={{ mb: 8, textAlign: 'center' }}>
+                    <Typography variant="h2" gutterBottom sx={{ fontSize: '2.5rem' }}>
+                        Nuestros Servicios
+                    </Typography>
+                    <Typography variant="subtitle1" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
+                        Soluciones integrales para diferenciar tu marca
+                    </Typography>
+                </Box>
 
-                <div className="services-list">
+                <Box sx={{ borderTop: 1, borderColor: 'divider', mt: 4 }}>
                     {servicesData.map((service, index) => (
-                        <div
+                        <Accordion
                             key={index}
-                            className={`service-item ${activeIndex === index ? 'active' : ''}`}
-                            onClick={() => toggleAccordion(index)}
+                            expanded={expanded === `panel${index}`}
+                            onChange={handleChange(`panel${index}`)}
+                            disableGutters
+                            elevation={0}
+                            square
+                            sx={{
+                                '&:before': { display: 'none' },
+                            }}
                         >
-                            <div className="service-header">
-                                <span className="service-number">0{index + 1}</span>
-                                <h3 className="service-title">{service.title}</h3>
-                                <span className="service-icon">+</span>
-                            </div>
-                            <div className="service-body">
-                                <p>{service.description}</p>
-                            </div>
-                        </div>
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon sx={{ fontSize: '2rem', fontWeight: 300 }} />}
+                                aria-controls={`panel${index}bh-content`}
+                                id={`panel${index}bh-header`}
+                                sx={{
+                                    py: 2,
+                                    '& .MuiAccordionSummary-content': {
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between'
+                                    }
+                                }}
+                            >
+                                <Typography sx={{ width: '5%', flexShrink: 0, color: 'text.secondary', fontFamily: 'Playfair Display', opacity: 0.5 }}>
+                                    0{index + 1}
+                                </Typography>
+                                <Typography sx={{ fontSize: { xs: '1.2rem', md: '1.8rem' }, width: '85%', flexShrink: 0 }}>
+                                    {service.title}
+                                </Typography>
+                            </AccordionSummary>
+                            <AccordionDetails sx={{ pl: { xs: 0, md: '10%' }, pb: 4 }}>
+                                <Typography color="text.secondary" sx={{ maxWidth: 600 }}>
+                                    {service.description}
+                                </Typography>
+                            </AccordionDetails>
+                        </Accordion>
                     ))}
-                </div>
-            </div>
-        </section>
+                </Box>
+            </Container>
+        </Box>
     );
 };
 
