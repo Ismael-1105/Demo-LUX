@@ -62,7 +62,7 @@ const Services = () => {
                             }}
                         >
                             <AccordionSummary
-                                expandIcon={<ExpandMoreIcon sx={{ fontSize: '2rem', fontWeight: 300 }} />}
+                                expandIcon={<ExpandMoreIcon sx={{ fontSize: '3rem', fontWeight: 300, ml: 4, mr: 5 }} />}
                                 aria-controls={`panel${index}bh-content`}
                                 id={`panel${index}bh-header`}
                                 sx={{
@@ -74,13 +74,12 @@ const Services = () => {
                                 }}
                             >
                                 <Typography sx={{ width: '5%', flexShrink: 0, color: 'text.secondary', fontFamily: 'Playfair Display', opacity: 0.5 }}>
-                                    0{index + 1}
                                 </Typography>
-                                <Typography sx={{ fontSize: { xs: '1.2rem', md: '1.8rem' }, width: '85%', flexShrink: 0 }}>
+                                <Typography sx={{ fontSize: { xs: '1.2rem', md: '1.8rem' }, width: '95%', flexShrink: 0 }}>
                                     {service.title}
                                 </Typography>
                             </AccordionSummary>
-                            <AccordionDetails sx={{ pl: { xs: 0, md: '10%' }, pb: 4 }}>
+                            <AccordionDetails sx={{ pl: { xs: 0, md: '10%' }, pb: 5 }}>
                                 <Typography color="text.secondary" sx={{ maxWidth: 600 }}>
                                     {service.description}
                                 </Typography>

@@ -1,7 +1,18 @@
-import React from 'react';
-import { Box, Container, Typography, Button } from '@mui/material';
+import React, { useState } from 'react';
+import {
+    Box,
+    Container,
+    Typography,
+    Button
+} from '@mui/material';
+import KitModal from '../../../components/KitModal';
 
 const Team = () => {
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
     return (
         <Box component="section" id="equipo" sx={{ py: 12 }}>
             <Container maxWidth="lg">
@@ -29,7 +40,7 @@ const Team = () => {
                             variant="outlined"
                             color="inherit"
                             size="large"
-                            href="#"
+                            onClick={handleOpen}
                             sx={{
                                 borderColor: 'common.white',
                                 color: 'common.white',
@@ -44,6 +55,8 @@ const Team = () => {
                             Sé parte de Ángeles
                         </Button>
                     </Box>
+
+                    <KitModal open={open} onClose={handleClose} />
                 </Box>
             </Container>
         </Box>
