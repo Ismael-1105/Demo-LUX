@@ -147,9 +147,11 @@ const Hero = () => {
                             aria-live="polite"
                             sx={{
                                 display: 'inline-block',
-                                color: 'primary.light',
+                                color: '#FFFFFF',
                                 fontStyle: 'normal',
+                                fontWeight: 600, // Mayor peso para mejor legibilidad
                                 ml: 0.5,
+                                textShadow: '0 2px 8px rgba(0, 229, 255, 0.3), 0 0 20px rgba(0, 229, 255, 0.2)', // Resplandor sutil
                                 animation: `${fadeUp} 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards`
                             }}
                         >
