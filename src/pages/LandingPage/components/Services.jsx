@@ -161,7 +161,7 @@ const FlipCard = ({ service }) => {
 
 const ServicesFlipCards = () => {
     return (
-        <Box sx={{ py: 8, bgcolor: "#fafbfc" }}>
+        <Box component="section" id="servicios" sx={{ py: 8, bgcolor: "#fafbfc" }}>
             <Container maxWidth="lg">
                 <Typography
                     variant="h2"
