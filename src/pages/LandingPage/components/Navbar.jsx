@@ -24,9 +24,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 const sections = [
     { label: 'Nosotros', href: '#nosotros', id: 'nosotros' },
+    { label: 'Tienda', href: '/tienda', id: null },    
     { label: 'Servicios', href: '#servicios', id: 'servicios' },
     { label: 'Convenios', href: '#convenios', id: 'convenios' },
-    { label: 'Tienda', href: '/tienda', id: null },
     { label: 'Únete', href: '#equipo', id: 'equipo' },
 ];
 
