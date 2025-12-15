@@ -18,7 +18,7 @@ const InstagramGallery = () => {
     const scroll = (direction) => {
         const { current } = scrollRef;
         if (current) {
-            const scrollAmount = 300;
+            const scrollAmount = 320;
             current.scrollBy({
                 left: direction === 'left' ? -scrollAmount : scrollAmount,
                 behavior: 'smooth'
@@ -27,13 +27,25 @@ const InstagramGallery = () => {
     };
 
     return (
-        <Box component="section" id="instagram" sx={{ py: 12 }}>
+        <Box component="section" id="instagram" sx={{ py: 12, bgcolor: 'background.default' }}>
             <Container maxWidth="lg">
                 <Box sx={{ mb: 8, textAlign: 'center' }}>
-                    <Typography variant="h2" gutterBottom>
+                    <Typography
+                        variant="overline"
+                        sx={{
+                            color: 'text.secondary',
+                            letterSpacing: '0.2em',
+                            fontWeight: 600,
+                            mb: 2,
+                            display: 'block'
+                        }}
+                    >
+                        INSTAGRAM
+                    </Typography>
+                    <Typography variant="h2" gutterBottom sx={{ fontSize: { xs: '2.5rem', md: '3.5rem' }, mb: 2 }}>
                         Explora el Mundo del Lujo
                     </Typography>
-                    <Typography variant="subtitle1" color="text.secondary">
+                    <Typography variant="subtitle1" color="text.secondary" sx={{ maxWidth: 700, mx: 'auto', fontSize: '1.1rem' }}>
                         Descubre las últimas tendencias, experiencias exclusivas y productos de alta gama en nuestro feed de Instagram.
                     </Typography>
                 </Box>
@@ -43,14 +55,22 @@ const InstagramGallery = () => {
                         onClick={() => scroll('left')}
                         sx={{
                             position: 'absolute',
-                            left: 0,
+                            left: { xs: -20, md: -20 },
                             top: '50%',
                             transform: 'translateY(-50%)',
                             zIndex: 2,
                             bgcolor: 'background.paper',
-                            boxShadow: 2,
+                            boxShadow: 3,
+                            width: 48,
+                            height: 48,
                             display: { xs: 'none', md: 'flex' },
-                            '&:hover': { bgcolor: 'background.paper', color: 'primary.main' }
+                            transition: 'all 0.3s ease',
+                            '&:hover': {
+                                bgcolor: 'primary.main',
+                                color: 'common.white',
+                                transform: 'translateY(-50%) scale(1.1)',
+                                boxShadow: 6,
+                            }
                         }}
                     >
                         <ArrowBackIosNewIcon fontSize="small" />
@@ -60,7 +80,7 @@ const InstagramGallery = () => {
                         ref={scrollRef}
                         sx={{
                             display: 'flex',
-                            gap: 2,
+                            gap: 3,
                             overflowX: 'auto',
                             pb: 2,
                             scrollbarWidth: 'none',
@@ -75,12 +95,21 @@ const InstagramGallery = () => {
                                     minWidth: 300,
                                     height: 300,
                                     position: 'relative',
-                                    borderRadius: 1,
+                                    borderRadius: 2,
                                     overflow: 'hidden',
                                     flexShrink: 0,
                                     cursor: 'pointer',
-                                    '&:hover .overlay': { opacity: 1 },
-                                    '&:hover img': { transform: 'scale(1.1)' }
+                                    boxShadow: 2,
+                                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    '&:hover': {
+                                        boxShadow: 8,
+                                        transform: 'scale(1.03)',
+                                        '& .overlay': { opacity: 1 },
+                                        '& img': { transform: 'scale(1.15)' },
+                                        '& .instagram-icon': {
+                                            transform: 'scale(1.2) rotate(15deg)',
+                                        }
+                                    }
                                 }}
                             >
                                 <Box
@@ -91,7 +120,7 @@ const InstagramGallery = () => {
                                         width: '100%',
                                         height: '100%',
                                         objectFit: 'cover',
-                                        transition: 'transform 0.5s ease'
+                                        transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
                                     }}
                                 />
                                 <Box
@@ -102,17 +131,34 @@ const InstagramGallery = () => {
                                         left: 0,
                                         width: '100%',
                                         height: '100%',
-                                        bgcolor: 'rgba(0,0,0,0.4)',
+                                        background: 'linear-gradient(135deg, rgba(103,126,234,0.8) 0%, rgba(118,75,162,0.8) 100%)',
                                         display: 'flex',
+                                        flexDirection: 'column',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         opacity: 0,
-                                        transition: 'opacity 0.3s ease'
+                                        transition: 'opacity 0.4s ease',
+                                        gap: 2,
                                     }}
                                 >
-                                    <Button variant="outlined" sx={{ color: 'white', borderColor: 'white', '&:hover': { borderColor: 'white', bgcolor: 'rgba(255,255,255,0.1)' } }}>
+                                    <InstagramIcon
+                                        className="instagram-icon"
+                                        sx={{
+                                            fontSize: 48,
+                                            color: 'white',
+                                            transition: 'all 0.4s ease',
+                                        }}
+                                    />
+                                    <Typography
+                                        variant="button"
+                                        sx={{
+                                            color: 'white',
+                                            fontWeight: 600,
+                                            letterSpacing: '0.1em',
+                                        }}
+                                    >
                                         Ver en Instagram
-                                    </Button>
+                                    </Typography>
                                 </Box>
                             </Box>
                         ))}
@@ -122,27 +168,41 @@ const InstagramGallery = () => {
                         onClick={() => scroll('right')}
                         sx={{
                             position: 'absolute',
-                            right: 0,
+                            right: { xs: -20, md: -20 },
                             top: '50%',
                             transform: 'translateY(-50%)',
                             zIndex: 2,
                             bgcolor: 'background.paper',
-                            boxShadow: 2,
+                            boxShadow: 3,
+                            width: 48,
+                            height: 48,
                             display: { xs: 'none', md: 'flex' },
-                            '&:hover': { bgcolor: 'background.paper', color: 'primary.main' }
+                            transition: 'all 0.3s ease',
+                            '&:hover': {
+                                bgcolor: 'primary.main',
+                                color: 'common.white',
+                                transform: 'translateY(-50%) scale(1.1)',
+                                boxShadow: 6,
+                            }
                         }}
                     >
                         <ArrowForwardIosIcon fontSize="small" />
                     </IconButton>
                 </Box>
 
-                <Stack direction="row" justifyContent="center" mt={6}>
+                <Stack direction="row" justifyContent="center" mt={8}>
                     <Button
                         variant="contained"
-                        color="secondary" // Using standard contained button (black)
                         startIcon={<InstagramIcon />}
                         href="https://instagram.com"
                         target="_blank"
+                        size="large"
+                        sx={{
+                            px: 5,
+                            py: 2,
+                            fontSize: '1rem',
+                            fontWeight: 600,
+                        }}
                     >
                         Síguenos en Instagram
                     </Button>

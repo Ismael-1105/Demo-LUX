@@ -1,95 +1,190 @@
-import React, { useState } from 'react';
-import { Box, Container, Typography, Accordion, AccordionSummary, AccordionDetails, Grid } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import React, { useState } from "react";
+import {
+    Box,
+    Container,
+    Typography,
+    Card,
+    CardContent,
+    Grid,
+    IconButton,
+} from "@mui/material";
+
+import PeopleIcon from "@mui/icons-material/People";
+import BrushIcon from "@mui/icons-material/Brush";
+import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
+import WebIcon from "@mui/icons-material/Web";
+import StarIcon from "@mui/icons-material/Star";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import InfoIcon from "@mui/icons-material/Info";
 
 const servicesData = [
     {
+        icon: PeopleIcon,
         title: "Community Management",
-        description: "Construimos y gestionamos tu comunidad en línea, creando contenido atractivo y manteniendo tu marca relevante y en crecimiento. ¡Llevamos tu marca al siguiente nivel!"
+        description:
+            "Construimos comunidades digitales, manteniendo tu marca activa y creciendo.",
+        features: ["Gestión de redes", "Creación de contenido", "Métricas"],
     },
     {
+        icon: BrushIcon,
         title: "Branding",
-        description: "Creamos identidades de marca únicas y poderosas que resuenan con tu público objetivo. Transformamos tu visión en una marca inolvidable."
+        description:
+            "Creamos identidades visuales sólidas y coherentes con tu visión.",
+        features: ["Identidad visual", "Manual de marca", "Estrategia"],
     },
     {
+        icon: CameraAltIcon,
         title: "Creadores UGC",
-        description: "Fomentamos la creación de contenido auténtico y atractivo por parte de tus usuarios, transformándolo en una poderosa herramienta de marketing. ¡Convierte a tus clientes en tus embajadores!"
+        description:
+            "Contenido auténtico creado por tus usuarios para impulsar tu marca.",
+        features: ["Contenido UGC", "Campañas", "Embajadores"],
     },
     {
+        icon: VideoLibraryIcon,
         title: "Video y Fotografía",
-        description: "Creamos videos cautivadores y de alta calidad que capturan la esencia de tu marca. Capturamos la esencia de tu marca a través de imágenes impresionantes y de alta calidad."
+        description:
+            "Producción audiovisual profesional para elevar tu contenido.",
+        features: ["Videos HD", "Fotografía", "Edición"],
     },
     {
+        icon: WebIcon,
         title: "Diseño Web",
-        description: "Desarrollamos y diseñamos sitios web atractivos y funcionales que reflejan la identidad de tu marca. Sitios optimizados para SEO y responsivos."
+        description:
+            "Sitios web modernos, rápidos, responsivos y optimizados.",
+        features: ["Responsive", "SEO", "Desarrollo"],
     },
     {
+        icon: StarIcon,
         title: "Marketing de Influencers",
-        description: "Conectamos tu marca con influencers relevantes que pueden amplificar tu mensaje. Incluye identificación, negociación y seguimiento de métricas."
-    }
+        description:
+            "Conectamos tu marca con influenciadores clave.",
+        features: ["Selección", "Gestión", "ROI"],
+    },
 ];
 
-const Services = () => {
-    const [expanded, setExpanded] = useState(false);
+const FlipCard = ({ service }) => {
+    const IconComp = service.icon;
+    const [flipped, setFlipped] = useState(false);
 
-    const handleChange = (panel) => (event, isExpanded) => {
-        setExpanded(isExpanded ? panel : false);
-    };
+    const handleToggle = () => setFlipped((s) => !s);
 
     return (
-        <Box component="section" id="servicios" sx={{ py: 12 }}>
-            <Container maxWidth="lg">
-                <Box sx={{ mb: 8, textAlign: 'center' }}>
-                    <Typography variant="h2" gutterBottom sx={{ fontSize: '2.5rem' }}>
-                        Nuestros Servicios
-                    </Typography>
-                    <Typography variant="subtitle1" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
-                        Soluciones integrales para diferenciar tu marca
-                    </Typography>
-                </Box>
+        <Box
+            sx={{
+                perspective: 1200,
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center'
+            }}
+            onClick={handleToggle}
+            onMouseEnter={() => setFlipped(true)}
+            onMouseLeave={() => setFlipped(false)}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleToggle(); }}
+            role="button"
+            tabIndex={0}
+        >
+            <Box
+                sx={{
+                    width: '100%',
+                    maxWidth: 350,
+                    position: 'relative',
+                    minHeight: { xs: 200, sm: 320 },
+                    transformStyle: 'preserve-3d',
+                    transition: 'transform 500ms cubic-bezier(.2,.8,.2,1)',
+                    transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                }}
+            >
+                {/* Front: only icon, large and centered */}
+                <Card
+                    sx={{
+                        borderRadius: 3,
+                        boxShadow: '0 12px 30px rgba(2,6,23,0.06)',
+                        height: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        p: 2,
+                        position: 'relative',
+                        backfaceVisibility: 'hidden',
+                        transform: 'translateZ(0)'
+                    }}
+                >
+                    <Box sx={{
+                        width: { xs: 140, sm: 140 },
+                        height: { xs: 140, sm: 250 },
+                        borderRadius: 3,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: 'transparent'
+                    }}>
+                        <IconComp sx={{ fontSize: { xs: 44, sm: 56 }, color: 'primary.main' }} />
+                    </Box>
+                </Card>
 
-                <Box sx={{ borderTop: 1, borderColor: 'divider', mt: 4 }}>
-                    {servicesData.map((service, index) => (
-                        <Accordion
-                            key={index}
-                            expanded={expanded === `panel${index}`}
-                            onChange={handleChange(`panel${index}`)}
-                            disableGutters
-                            elevation={0}
-                            square
-                            sx={{
-                                '&:before': { display: 'none' },
-                            }}
-                        >
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon sx={{ fontSize: '3rem', fontWeight: 300, ml: 4, mr: 5 }} />}
-                                aria-controls={`panel${index}bh-content`}
-                                id={`panel${index}bh-header`}
-                                sx={{
-                                    py: 2,
-                                    '& .MuiAccordionSummary-content': {
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between'
-                                    }
-                                }}
-                            >
-                                <Typography sx={{ width: '5%', flexShrink: 0, color: 'text.secondary', fontFamily: 'Playfair Display', opacity: 0.5 }}>
-                                </Typography>
-                                <Typography sx={{ fontSize: { xs: '1.2rem', md: '1.8rem' }, width: '95%', flexShrink: 0 }}>
-                                    {service.title}
-                                </Typography>
-                            </AccordionSummary>
-                            <AccordionDetails sx={{ pl: { xs: 0, md: '10%' }, pb: 5 }}>
-                                <Typography color="text.secondary" sx={{ maxWidth: 600 }}>
-                                    {service.description}
-                                </Typography>
-                            </AccordionDetails>
-                        </Accordion>
+                {/* Back: full content centered and readable */}
+                <Card
+                    sx={{
+                        borderRadius: 3,
+                        boxShadow: '0 12px 30px rgba(2,6,23,0.06)',
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        p: { xs: 2, sm: 3 },
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        backfaceVisibility: 'hidden',
+                        transform: 'rotateY(180deg)',
+                        boxSizing: 'border-box',
+                        textAlign: 'center'
+                    }}
+                >
+                    <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>{service.title}</Typography>
+                    <Typography color="text.secondary" sx={{ fontSize: '0.95rem', mb: 2 }}>{service.description}</Typography>
+
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+                        {service.features.map((f, i) => (
+                            <Typography key={i} sx={{ fontSize: '0.95rem', color: 'text.secondary', mb: 0.6 }}>
+                                • {f}
+                            </Typography>
+                        ))}
+                    </Box>
+                </Card>
+            </Box>
+        </Box>
+    );
+};
+
+const ServicesFlipCards = () => {
+    return (
+        <Box sx={{ py: 8, bgcolor: "#fafbfc" }}>
+            <Container maxWidth="lg">
+                <Typography
+                    variant="h2"
+                    sx={{
+                        mb: 2,
+                        fontSize: { xs: '1.8rem', md: '2.6rem' },
+                        textAlign: "center",
+                        fontWeight: 700,
+                    }}
+                >
+                    Nuestros Servicios
+                </Typography>
+
+                <Grid container spacing={3}>
+                    {servicesData.map((service, idx) => (
+                        <Grid item key={idx} xs={12} sm={6} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <FlipCard service={service} />
+                        </Grid>
                     ))}
-                </Box>
+                </Grid>
             </Container>
         </Box>
     );
 };
 
-export default Services;
+export default ServicesFlipCards;

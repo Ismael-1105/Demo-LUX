@@ -2,9 +2,8 @@ import React from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Services from './components/Services';
-import Team from './components/Team';
-import InstagramGallery from './components/InstagramGallery';
-import Contact from './components/Contact';
+import About from './components/About';
+import Partners from './components/Partners';
 import Footer from './components/Footer';
 
 const LandingPage = () => {
@@ -12,10 +11,9 @@ const LandingPage = () => {
         <div className="landing-page">
             <Navbar />
             <Hero />
+            <About />
             <Services />
-            <Team />
-            <InstagramGallery />
-            <Contact />
+            <Partners />
             <Footer />
         </div>
     );
