@@ -1,0 +1,151 @@
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+
+// material-ui
+import { useTheme } from '@mui/material/styles';
+import MenuItem from '@mui/material/MenuItem';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+
+// third party
+import Chart from 'react-apexcharts';
+
+// project imports
+import useConfig from '../hooks/useConfig';
+import SkeletonTotalGrowthBarChart from '../ui-components/Skeleton/TotalGrowthBarChart';
+import MainCard from '../ui-components/MainCard';
+import { gridSpacing } from '../constants/constant';
+
+// chart data
+import barChartOptions from '../chart-data/service-growth-bar-chart';
+
+const status = [
+    { value: 'today', label: 'Hoy' },
+    { value: 'month', label: 'Este Mes' },
+    { value: 'year', label: 'Este Año' }
+];
+
+const series = [
+    { name: 'Diseño', data: [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 75] },
+    { name: 'Contenido', data: [35, 15, 15, 35, 65, 40, 80, 25, 15, 85, 25, 75] },
+    { name: 'Marketing Digital', data: [35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10] },
+    { name: 'Desarrollo Web', data: [0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0] }
+];
+
+export default function ServiceGrowthBarChart({ isLoading }) {
+    const theme = useTheme();
+
+    const {
+        state: { fontFamily }
+    } = useConfig();
+
+    const [value, setValue] = useState('today');
+    const [chartOptions, setChartOptions] = useState(barChartOptions);
+
+    // 🔐 Fallback seguro: funciona con y sin CssVarsProvider
+    const palette = theme.vars?.palette ?? theme.palette;
+
+    const textPrimary = palette.text.primary;
+    const divider = palette.divider;
+    const grey500 = palette.grey[500];
+
+    const primary200 = palette.primary[200];
+    const primaryDark = palette.primary.dark;
+    const secondaryMain = palette.secondary.main;
+    const secondaryLight = palette.secondary.light;
+
+    useEffect(() => {
+        setChartOptions({
+            ...barChartOptions,
+            chart: { ...barChartOptions.chart, fontFamily },
+            colors: [primary200, primaryDark, secondaryMain, secondaryLight],
+            xaxis: {
+                ...barChartOptions.xaxis,
+                labels: { style: { colors: textPrimary } }
+            },
+            yaxis: {
+                ...barChartOptions.yaxis,
+                labels: { style: { colors: textPrimary } }
+            },
+            grid: { borderColor: divider },
+            tooltip: { theme: 'light' },
+            legend: {
+                ...(barChartOptions.legend ?? {}),
+                labels: {
+                    ...(barChartOptions.legend?.labels ?? {}),
+                    colors: grey500
+                }
+            }
+        });
+    }, [
+        fontFamily,
+        primary200,
+        primaryDark,
+        secondaryMain,
+        secondaryLight,
+        textPrimary,
+        grey500,
+        divider
+    ]);
+
+    return (
+        <>
+            {isLoading ? (
+                <SkeletonTotalGrowthBarChart />
+            ) : (
+                <MainCard>
+                    <Stack sx={{ gap: gridSpacing }}>
+                        <Stack
+                            direction="row"
+                            sx={{ alignItems: 'center', justifyContent: 'space-between' }}
+                        >
+                            <Stack sx={{ gap: 1 }}>
+                                <Typography variant="subtitle2">
+                                    Crecimiento Mensual
+                                </Typography>
+                                <Typography variant="h3">$8,450</Typography>
+                            </Stack>
+
+                            <TextField
+                                select
+                                value={value}
+                                onChange={(e) => setValue(e.target.value)}
+                                size="small"
+                            >
+                                {status.map((option) => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </Stack>
+
+                        <Box
+                            sx={{
+                                ...theme.applyStyles('light', {
+                                    '& .apexcharts-series:nth-of-type(4) path:hover': {
+                                        filter: 'brightness(0.95)',
+                                        transition: 'all 0.3s ease'
+                                    }
+                                })
+                            }}
+                        >
+                            <Chart
+                                options={chartOptions}
+                                series={series}
+                                type="bar"
+                                height={480}
+                            />
+                        </Box>
+                    </Stack>
+                </MainCard>
+            )}
+        </>
+    );
+}
+
+ServiceGrowthBarChart.propTypes = {
+    isLoading: PropTypes.bool
+};

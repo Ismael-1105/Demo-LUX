@@ -24,7 +24,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 const sections = [
     { label: 'Nosotros', href: '#nosotros', id: 'nosotros' },
-    { label: 'Tienda', href: '/tienda', id: null },    
+    { label: 'Tienda', href: '/tienda', id: null },
     { label: 'Servicios', href: '#servicios', id: 'servicios' },
     { label: 'Convenios', href: '#convenios', id: 'convenios' },
     { label: 'Únete', href: '#equipo', id: 'equipo' },
@@ -35,70 +35,28 @@ const Navbar = () => {
     const [cartOpen, setCartOpen] = useState(false);
     const [openKit, setOpenKit] = useState(false);
     const [scrollY, setScrollY] = useState(0);
-    const [activeSection, setActiveSection] = useState(null);
 
     const { getTotalItems } = useCart();
     const navigate = useNavigate();
-
     const theme = useTheme();
     const location = useLocation();
     const pathname = location.pathname;
 
-    /* ---------------- Scroll listener (blur dinámico) ---------------- */
+    /* ---------------- Scroll listener ---------------- */
     useEffect(() => {
         const onScroll = () => setScrollY(window.scrollY);
         window.addEventListener('scroll', onScroll, { passive: true });
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
 
-    const blur = Math.min(18, scrollY / 10);
-    const opacity = Math.min(0.9, 0.25 + scrollY / 400);
-
-    /* ---------------- Active section observer & Hash handling ---------------- */
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        setActiveSection(entry.target.id);
-                    }
-                });
-            },
-            { threshold: 0.5 }
-        );
-
-        sections.forEach(s => {
-            if (s.id) {
-                const el = document.getElementById(s.id);
-                if (el) observer.observe(el);
-            }
-        });
-
-        return () => observer.disconnect();
-    }, []);
-
-    // Handle hash navigation on route change
-    useEffect(() => {
-        const hash = window.location.hash.slice(1);
-        if (hash && pathname === '/') {
-            setTimeout(() => {
-                const element = document.getElementById(hash);
-                if (element) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    setActiveSection(hash);
-                }
-            }, 100);
-        }
-    }, [pathname]);
-
-    const textColor = '#111';
+    const textColor = scrollY < 20 ? '#fff' : '#111';
 
     /* ---------------- Drawer ---------------- */
     const drawer = (
         <Box
             sx={{
                 height: '100%',
-                background: 'linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%)',
+                background: 'linear-gradient(135deg, #000000 0%, #f9f9f9 100%)',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
@@ -112,10 +70,7 @@ const Navbar = () => {
                     position: 'absolute',
                     top: 20,
                     right: 20,
-                    color: theme.palette.primary.main,
-                    '&:hover': {
-                        bgcolor: 'rgba(0, 0, 0, 0.05)'
-                    }
+                    color: theme.palette.primary.main
                 }}
             >
                 <CloseIcon />
@@ -147,12 +102,10 @@ const Navbar = () => {
                             width: 'fit-content',
                             px: 3,
                             py: 1.5,
-                            bgcolor: activeSection === item.id && item.id ? `${theme.palette.primary.main}15` : 'transparent',
                             borderRadius: 2,
-                            borderLeft: activeSection === item.id && item.id ? `4px solid ${theme.palette.primary.main}` : 'none',
-                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                            transition: 'opacity 0.3s ease',
                             '&:hover': {
-                                bgcolor: `${theme.palette.primary.main}10`
+                                opacity: 0.7
                             }
                         }}
                     >
@@ -160,10 +113,9 @@ const Navbar = () => {
                             primary={item.label}
                             primaryTypographyProps={{
                                 variant: 'h5',
-                                fontWeight: activeSection === item.id ? 700 : 600,
+                                fontWeight: 600,
                                 sx: {
-                                    color: activeSection === item.id && item.id ? theme.palette.primary.main : '#111',
-                                    transition: 'all 0.3s ease'
+                                    color: '#111'
                                 }
                             }}
                         />
@@ -179,33 +131,28 @@ const Navbar = () => {
             elevation={0}
             sx={{
                 color: textColor,
-                bgcolor: `rgba(255,255,255,${opacity})`,
-                backdropFilter: `blur(${blur}px)`,
-                WebkitBackdropFilter: `blur(${blur}px)`,
-                borderBottom: `1px solid rgba(0,0,0,${Math.min(0.08, scrollY / 2000)})`,
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                boxShadow: scrollY > 10 ? '0 4px 20px rgba(0,0,0,0.08)' : 'none'
+                background: scrollY < 20
+                    ? 'linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0))'
+                    : 'rgba(255,255,255,0.88)',
+                backdropFilter: scrollY < 20 ? 'none' : 'blur(14px)',
+                WebkitBackdropFilter: scrollY < 20 ? 'none' : 'blur(14px)',
+                borderBottom: scrollY < 20 ? 'none' : '1px solid rgba(0,0,0,0.08)',
+                boxShadow: scrollY > 20 ? '0 8px 24px rgba(0,0,0,0.08)' : 'none',
+                transition: 'all 0.35s ease'
             }}
         >
             <Container maxWidth="lg">
                 <Toolbar sx={{ justifyContent: 'space-between', py: 1.5 }}>
-                    {/* Logo (favicon) */}
+                    {/* Logo */}
                     <Box
                         component="a"
-                        href="./"
+                        href="/"
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
                             gap: 1.5,
                             textDecoration: 'none',
-                            fontWeight: 800,
-                            color: 'inherit',
-                            fontSize: '1.3rem',
-                            letterSpacing: '-0.5px',
-                            transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                            '&:hover': {
-                                transform: 'scale(1.05)'
-                            }
+                            color: 'inherit'
                         }}
                     >
                         <Box
@@ -215,80 +162,60 @@ const Navbar = () => {
                             sx={{
                                 width: 42,
                                 height: 42,
-                                transition: 'transform 0.3s ease',
-                                '&:hover': {
-                                    transform: 'rotate(-5deg)'
-                                }
+                                filter: scrollY < 20
+                                    ? 'invert(1) brightness(1.2)'
+                                    : 'none'
                             }}
                         />
                     </Box>
 
                     {/* Desktop Menu */}
                     <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
-                        {sections.map(item => {
-                            const isActive = activeSection === item.id;
+                        {sections.map(item => (
+                            <Button
+                                key={item.label}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    if (item.label === 'Únete') {
+                                        setOpenKit(true);
+                                        return;
+                                    }
+                                    if (item.href && item.href.startsWith('/')) {
+                                        navigate(item.href);
+                                        return;
+                                    }
+                                    if (item.id) {
+                                        navigate(`/#${item.id}`);
+                                    }
+                                }}
+                                sx={{
+                                    color: textColor,
+                                    fontWeight: 600,
+                                    textTransform: 'none',
+                                    fontSize: '0.95rem',
+                                    px: 2.5,
+                                    py: 1,
+                                    transition: 'opacity 0.3s ease',
+                                    '&:hover': {
+                                        color: textColor,
+                                        opacity: 0.75
+                                    }
+                                }}
+                            >
+                                {item.label}
+                            </Button>
+                        ))}
 
-                            return (
-                                <Button
-                                    key={item.label}
-                                    href={item.href}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        if (item.label === 'Únete') {
-                                            setOpenKit(true);
-                                            return;
-                                        }
-                                        if (item.href && item.href.startsWith('/')) {
-                                            navigate(item.href);
-                                            return;
-                                        }
-                                        if (item.id) {
-                                            navigate(`/#${item.id}`);
-                                        }
-                                    }}
-                                    sx={{
-                                        color: isActive ? theme.palette.primary.main : '#111',
-                                        position: 'relative',
-                                        fontWeight: isActive ? 700 : 600,
-                                        textTransform: 'none',
-                                        fontSize: '0.95rem',
-                                        px: 2.5,
-                                        py: 1,
-                                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                                        '&:hover': {
-                                            color: theme.palette.primary.main,
-                                            transform: 'translateY(-2px)'
-                                        },
-                                        '&::after': {
-                                            content: '""',
-                                            position: 'absolute',
-                                            left: '50%',
-                                            bottom: -8,
-                                            width: isActive ? '100%' : 0,
-                                            height: 3,
-                                            backgroundColor: theme.palette.primary.main,
-                                            transform: 'translateX(-50%)',
-                                            transition: 'width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                                            borderRadius: '2px'
-                                        }
-                                    }}
-                                >
-                                    {item.label}
-                                </Button>
-                            );
-                        })}
-
-                        {/* Cart: mostrar solo en /tienda */}
+                        {/* Cart */}
                         {pathname === '/tienda' && (
                             <IconButton
                                 onClick={() => setCartOpen(true)}
                                 sx={{
                                     color: 'inherit',
                                     ml: 1,
-                                    transition: 'all 0.3s ease',
                                     '&:hover': {
-                                        color: theme.palette.primary.main,
-                                        transform: 'scale(1.1)'
+                                        color: 'inherit',
+                                        opacity: 0.75
                                     }
                                 }}
                             >
@@ -310,15 +237,10 @@ const Navbar = () => {
                                 backgroundColor: 'transparent',
                                 fontWeight: 600,
                                 textTransform: 'none',
-                                px: 2.5,
-                                py: 1,
-                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                                 '&:hover': {
+                                    color: textColor,
                                     borderColor: 'transparent',
-                                    color: theme.palette.primary.main,
-                                    bgcolor: `${theme.palette.primary.main}08`,
-                                    transform: 'translateY(-2px)',
-                                    boxShadow: `0 8px 20px ${theme.palette.primary.main}20`
+                                    bgcolor: 'rgba(255,255,255,0.08)'
                                 }
                             }}
                         >
@@ -327,16 +249,13 @@ const Navbar = () => {
                     </Box>
 
                     {/* Mobile */}
-                    <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1, alignItems: 'center' }}>
+                    <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
                         {pathname === '/tienda' && (
                             <IconButton
                                 onClick={() => setCartOpen(true)}
                                 sx={{
                                     color: textColor,
-                                    transition: 'all 0.3s ease',
-                                    '&:hover': {
-                                        color: theme.palette.primary.main
-                                    }
+                                    '&:hover': { opacity: 0.75 }
                                 }}
                             >
                                 <Badge badgeContent={getTotalItems()} color="error">
@@ -349,10 +268,7 @@ const Navbar = () => {
                             onClick={() => setMobileOpen(true)}
                             sx={{
                                 color: textColor,
-                                transition: 'all 0.3s ease',
-                                '&:hover': {
-                                    color: theme.palette.primary.main
-                                }
+                                '&:hover': { opacity: 0.75 }
                             }}
                         >
                             <MenuIcon />

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
 
@@ -14,20 +14,49 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+    useEffect(() => {
+        // Restore user from localStorage on mount
+        const savedUser = localStorage.getItem('luxUser');
+        if (savedUser) {
+            const userData = JSON.parse(savedUser);
+            setUser(userData);
+            setIsAuthenticated(true);
+        }
+    }, []);
+
     const login = (email, password) => {
-        // Simulate login (frontend only)
-        const mockUser = {
-            id: 1,
-            name: 'Usuario Demo',
-            email: email,
-            avatar: null
-        };
+        // Simulate admin login with credentials
+        let mockUser = null;
+        let isAdmin = false;
+
+        // Credenciales de admin simuladas
+        if (email === 'admin@lux.com' && password === 'admin123') {
+            isAdmin = true;
+            mockUser = {
+                id: 999,
+                name: 'Administrador LUX',
+                email: email,
+                avatar: null,
+                role: 'admin',
+                isAdmin: true
+            };
+        } else {
+            // Usuario regular
+            mockUser = {
+                id: 1,
+                name: 'Usuario Demo',
+                email: email,
+                avatar: null,
+                role: 'user',
+                isAdmin: false
+            };
+        }
 
         setUser(mockUser);
         setIsAuthenticated(true);
         localStorage.setItem('luxUser', JSON.stringify(mockUser));
 
-        return { success: true, user: mockUser };
+        return { success: true, user: mockUser, isAdmin };
     };
 
     const logout = () => {
@@ -41,7 +70,9 @@ export const AuthProvider = ({ children }) => {
         const newUser = {
             id: Date.now(),
             ...userData,
-            avatar: null
+            avatar: null,
+            role: 'user',
+            isAdmin: false
         };
 
         setUser(newUser);
@@ -56,7 +87,8 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
         login,
         logout,
-        register
+        register,
+        isAdmin: user?.isAdmin || false
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

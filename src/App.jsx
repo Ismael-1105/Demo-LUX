@@ -6,6 +6,8 @@ import LandingPage from './pages/LandingPage/LandingPage';
 import Shop from './pages/Shop/Shop';
 import Login from './pages/Login/Login';
 import Checkout from './pages/Checkout/Checkout';
+import AdminDashboard from './pages/Admin/AdminDashboard';
+import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
@@ -24,6 +26,10 @@ function App() {
                 <Route path="/tienda" element={<Shop />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/checkout" element={<Checkout />} />
+                <Route 
+                  path="/admin" 
+                  element={<ProtectedRoute requireAdmin={true} element={<AdminDashboard />} />} 
+                />
               </Routes>
             </div>
           </BrowserRouter>

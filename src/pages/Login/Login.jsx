@@ -22,14 +22,31 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
+    const [error, setError] = useState('');
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { login, isAdmin } = useAuth();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Simulated login
-        login(email, password);
-        navigate('/');
+        setError('');
+        const result = login(email, password);
+        
+        if (result.isAdmin) {
+            navigate('/admin');
+        } else {
+            navigate('/');
+        }
+    };
+
+    // Credenciales de demostración
+    const fillAdminCredentials = () => {
+        setEmail('admin@lux.com');
+        setPassword('admin123');
+    };
+
+    const fillUserCredentials = () => {
+        setEmail('user@example.com');
+        setPassword('password123');
     };
 
     return (
@@ -206,6 +223,48 @@ const Login = () => {
                             </Button>
                         </Stack>
                     </Box>
+
+                    {/* Demo Credentials */}
+                    <Divider sx={{ my: 3 }}>
+                        <Typography variant="caption" color="text.secondary">
+                            CREDENCIALES DE DEMOSTRACIÓN
+                        </Typography>
+                    </Divider>
+
+                    <Stack spacing={2}>
+                        <Button
+                            variant="outlined"
+                            fullWidth
+                            onClick={fillAdminCredentials}
+                            sx={{
+                                py: 1,
+                                color: '#667eea',
+                                borderColor: '#667eea',
+                                fontWeight: 600,
+                                '&:hover': {
+                                    bgcolor: 'rgba(102, 126, 234, 0.1)',
+                                }
+                            }}
+                        >
+                            👨‍💼 Probar como Admin
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            fullWidth
+                            onClick={fillUserCredentials}
+                            sx={{
+                                py: 1,
+                                color: '#764ba2',
+                                borderColor: '#764ba2',
+                                fontWeight: 600,
+                                '&:hover': {
+                                    bgcolor: 'rgba(118, 75, 162, 0.1)',
+                                }
+                            }}
+                        >
+                            👤 Probar como Usuario
+                        </Button>
+                    </Stack>
 
                     {/* Register Link */}
                     <Box sx={{ mt: 3, textAlign: 'center' }}>

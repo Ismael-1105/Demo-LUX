@@ -6,10 +6,25 @@ const theme = createTheme({
             main: '#000000',
             light: '#333333',
             dark: '#000000',
+            200: '#90CAF9',
+            800: '#1565C0',
         },
         secondary: {
             main: '#333333',
             light: '#666666',
+            dark: '#1a1a1a',
+            200: '#B0BEC5',
+            800: '#37474F',
+        },
+        orange: {
+            light: '#FFE0B2',
+            main: '#FF9800',
+            dark: '#E65100',
+        },
+        success: {
+            light: '#C8E6C9',
+            main: '#4CAF50',
+            dark: '#2E7D32',
         },
         background: {
             default: '#ffffff',
@@ -76,6 +91,23 @@ const theme = createTheme({
             fontFamily: "'Outfit', sans-serif",
             fontWeight: 500,
             letterSpacing: '0.05em',
+        },
+        // Berry dashboard avatar sizes
+        largeAvatar: {
+            width: 44,
+            height: 44,
+        },
+        mediumAvatar: {
+            width: 34,
+            height: 34,
+        },
+        smallAvatar: {
+            width: 22,
+            height: 22,
+        },
+        commonAvatar: {
+            cursor: 'pointer',
+            borderRadius: '8px',
         },
     },
     shadows: [
